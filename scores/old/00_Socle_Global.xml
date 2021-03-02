@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="aa03b188-733f-5f9c-bdf5-5019bd10d63d" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="00_Socle_Global" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+          	(ne device_type (enum server))
+            	(lt number_of_days_since_last_seen  (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="6cf39957-078d-1ac4-8458-37f88ad4c43a" Name="00_Socle_Global" Description="" Visibility="visible" Weight="1">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="fbe6326a-6554-5845-22e9-510b22ef24be" Name="Socle Compliance" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="842caaea-95b2-afa2-c7a9-6c6fed404160" Name="Score Compliance" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:01_Socle_Compliance/01_Socle_Compliance" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Mauvais">
+              <From Value="0" Score="0" />
+              <To Value="5.999" Score="5.999" />
+            </Range>
+            <Range Label="Médiocre">
+              <From Value="6" Score="6" />
+              <To Value="7.999" Score="7.999" />
+            </Range>
+            <Range Label="Bon">
+              <From Value="8" Score="8" />
+              <To Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="1c2626fe-8ec6-daf6-8b3a-2803da6b6cb8" Name="Socle Sécurité" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="f1826e7e-f4cd-67b3-9c92-8f8062192301" Name="Score Securité" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:02_Socle_Security/02_Socle_Security" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Mauvais">
+              <From Value="0" Score="0" />
+              <To Value="5.999" Score="5.999" />
+            </Range>
+            <Range Label="Médiocre">
+              <From Value="6" Score="6" />
+              <To Value="7.999" Score="7.999" />
+            </Range>
+            <Range Label="Bon">
+              <From Value="8" Score="8" />
+              <To Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="c9b5975c-966c-7747-5a91-76acd45b9313" Name="Socle Opérationnel" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="ec65d2dc-cd68-01f7-6c0b-a54f7ec5d39c" Name="Score Opérationnel" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:03_Socle_Operationnel/03_Socle_Operationnel" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Mauvais">
+              <From Value="0" Score="0" />
+              <To Value="5.999" Score="5.999" />
+            </Range>
+            <Range Label="Médiocre">
+              <From Value="6" Score="6" />
+              <To Value="7.999" Score="7.999" />
+            </Range>
+            <Range Label="Bon">
+              <From Value="8" Score="8" />
+              <To Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <Document>
+      <Header>Ce Score est la moyenne des 3 scores thématiques : 
+1/ La Compliance,
+2/ La Sécurité,
+3/ L'aspect Opérationnel.
+
+Chacun de ces scores dispose du même poid.
+Ainsi, la note Globale de ce score est une moyenne pondérée.
+
+Le Score GLOBAL est rafraichi toutes les heures.</Header>
+      <Sections>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Couleur et intitulés de la Notation</Title>
+          <Description>de 0 à 6 : ROUGE, Mauvais</Description>
+          <Description>de 6 à 8 : JAUNE, Médiocre</Description>
+          <Description>de 8 à 10 : VERT, Bon</Description>
+          <Description />
+          <Description>NOTA BENE : </Description>
+          <Description>Cette répartition est valable pour tout les scores "Socle".</Description>
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

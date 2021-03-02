@@ -1,0 +1,19 @@
+mixin compositeScore(score, scoreDefName, parentCompositeName, payload)
+    if score.isVisible
+        - var compositeName = score.name
+        - var divName = 'score__'.concat(scoreDefName, '__', compositeName)
+        if (score.isMain || score.isParentMain)
+            - var displayName = compositeName
+        else
+            - var displayName = parentCompositeName.concat(' - ', compositeName)
+        
+        if score.hasLeaf
+            if score.hasDoc
+                .col-12.composite.canSelect(name=divName)= displayName
+            else
+                .col-12.composite(name=divName)= displayName
+        each child in score.childs
+            if (child.type === 'leaf' && child.isVisible)
+                +leafScore(child, scoreDefName, payload)
+            else
+                +compositeScore(child, scoreDefName, displayName, payload)

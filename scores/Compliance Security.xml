@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="f4a4c34f-e80c-ec7e-8c34-9569d211aafe" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="Compliance Security" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device(ne device_type (enum server))(lt number_of_days_since_last_seen (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="frustrating" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="5" Label="average" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="7" Label="good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="db5ed059-f06d-ac4a-9bc9-b03cc8870003" Name="Compliance Security" Description="" Visibility="visible" Weight="1" DisplayName="Compliance Security">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="8cbcfb83-262f-ead7-15ea-dca3d3dbcd18" Name="Configuration" Description="" Visibility="visible" Weight="1" DisplayName="Configuration">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="a82ea11d-e506-01dc-dfa7-217e3cd44d03" Name="Bios Password" Description="" Visibility="visible" Weight="1" DisplayName="Bios Password">
+        <Input>
+          <Field Name="#Value_to_Come" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <CompositeScore UID="346a9903-91a1-8028-0c1c-705f2b94692c" Name="Encryption" Description="" Visibility="visible" Weight="1" DisplayName="Encryption">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="6b5d0869-10e1-9100-b706-00f231454ebc" Name="Encryption Status" Description="#action:Get BitLocker Information/ConversionStatus" Visibility="visible" Weight="1" DisplayName="Encryption Status">
+          <Input>
+            <Computation Name="Encryption Status" Description="" UID="5a9ddf0e-4c07-ae3b-7339-fdce80068e45">
+              <Query Output="#action:Get BitLocker Information/ConversionStatus" DefaultOutputValue="Desktop are not concerned">(select (id #"action:Get BitLocker Information/ConversionStatus")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Fully decrypted" Score="0" />
+              <String Value="Fully encrypted" Score="10" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="7b2747de-72b0-164e-2811-604577f9a934" Name="Protector Status" Description="" Visibility="visible" Weight="1" DisplayName="Protector Status">
+          <Input>
+            <Computation Name="Protector Status" Description="" UID="b1355a1b-90af-d747-c7f5-8fdc983d45e3">
+              <Query Output="#action:Get BitLocker Information/ProtectionStatus" DefaultOutputValue="Desktop are not concerned">(select (id #"action:Get BitLocker Information/ProtectionStatus")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Unprotected" Score="0" />
+              <String Value="Protected" Score="10" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="5a960934-475c-7828-ef98-67eecbdf831a" Name="Recovery Key" Description="" Visibility="visible" Weight="1" DisplayName="Recovery Key">
+          <Input>
+            <Field Name="#Value_to_define" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Value="aaa" Score="0" />
+            </Enums>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="7e06d830-61b1-68e3-0c41-657bc276761a" Name="Device" Description="" Visibility="visible" Weight="1" DisplayName="Device">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="c69af00e-fa33-d803-76b7-6c06b484a559" Name="Number of days since Last Activity" Description="" Visibility="visible" Weight="1" DisplayName="Number of days since Last Activity">
+        <Input>
+          <Field Name="number_of_days_since_last_seen" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="moins de 3 mois">
+              <From Value="0" Score="10" />
+            </Range>
+            <Range Label="plus de 3 mois">
+              <From Value="90" Score="0" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="847bf0b1-9a0a-fe95-b235-3f7768cddc09" Name="OS" Description="" Visibility="visible" Weight="1" DisplayName="OS">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="9c8e7d97-3288-c542-bbb0-f7837cf78b38" Name="OS Build Version" Description="" Visibility="visible" Weight="1" DisplayName="OS Build Version">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="d288c5b1-e9e6-7d1f-5718-9e24ef3e2151" Name="Last Reboot" Description="" Visibility="visible" Weight="1" DisplayName="Last Reboot">
+          <Input>
+            <Field Name="number_of_days_since_last_boot" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Less one Month">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="More than one month">
+                <From Value="30" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="f66d1ef6-4cad-9631-69ef-cea67a207a9c" Name="OS _ Version" Description="" Visibility="visible" Weight="1" DisplayName="OS _ Version">
+          <Input>
+            <Field Name="os_version_and_architecture" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Windows 10*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="b6276c61-9283-76ff-8b57-e4a311765a00" Name="OS _ Build Compliant" Description="" Visibility="visible" Weight="1" DisplayName="OS _ Build Compliant">
+          <Input>
+            <Field Name="#Windows OS Build Compliance" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Value="Version Up to Date" Score="10" />
+              <Enum Value="Version Acceptable" Score="6" />
+              <Enum Value="Version Obsolete" Score="1" />
+              <Enum Value="*" Score="0" />
+            </Enums>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="970f6460-fdeb-7a8d-9353-27ac208064ab" Name="OS _ Build Version" Description="" Visibility="visible" Weight="1" DisplayName="OS _ Build Version">
+          <Input>
+            <Field Name="#Windows OS Build Version" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Value="aaaa" Score="0" />
+            </Enums>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="05b2f6fd-4428-4975-1824-35e8e095d12d" Name="Office" Description="" Visibility="visible" Weight="1" DisplayName="Office">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="bc08971a-19df-0ba0-601e-4032809018c3" Name="Office _ Patch Management" Description="" Visibility="visible" Weight="1" DisplayName="Office _ Patch Management">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/Office" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Office Package OLD Version detected">
+              <From Value="0" Score="1" />
+            </Range>
+            <Range Label="Office Package PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="Office Package UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="a9ee667c-e627-6138-3e23-0056de025096" Name="Browser" Description="This score indicates the version of Web Browser." Visibility="visible" Weight="10">
+      <Operation>
+        <WeightedAverage />
+      </Operation>
+      <LeafScore UID="1b81d027-999f-9daf-8b77-22fadea9fc9d" Name="Edge _ Patch Management" Description="Version of Edge Package detected" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/Web_Edge" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Edge Package not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Edge Package OLD Version detected">
+              <From Value="1" Score="1" />
+            </Range>
+            <Range Label="Edge Package PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="Edge Package UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="660e488d-7d1d-ec8c-8ed0-9443ed5b33a6" Name="Chrome _ Patch Management" Description="Version of Chrome Package detected" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/Web_Chrome" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Chrome Package not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Chrome Package OLD Version detected">
+              <From Value="1" Score="1" />
+            </Range>
+            <Range Label="Chrome Package PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="Chrome Package UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <Document />
+  </CompositeScore>
+</ScoreDef>

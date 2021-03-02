@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="bf38e5ea-1234-536b-ac9c-69758ff918aa" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="10_Custom_Info" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+            (ne device_type (enum server))
+            (lt number_of_days_since_last_seen (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="31c54ab5-1234-1cb3-c391-cbced999240c" Name="10_Custom_Info" Description="Indicates the Hardware status With information Cross Services" Visibility="visible" Weight="1">
+    <Operation>
+      <WeightedAverage />
+    </Operation>
+    <CompositeScore UID="b754cd1e-b4c4-edb7-31ab-91fbafea1626" Name="Identification" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="7a8cdc1a-9500-2894-5248-619acaa95a03" Name="Device Name" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="name" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="24765276-c22e-e674-026e-e0b5ebe3eb15" Name="User Name" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Password Info/UsrName" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="891dfcd9-2222-7b81-2c26-4b521508d363" Name="User Domain" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Password Info/UsrDomain" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="ACCOUNT IS LOCAL" Value="LOCAL ACCOUNT" Score="0" />
+            <String Value="*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="98865bc3-1111-1501-aa58-abf19473ebb5" Name="Territory" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SpeigKey 01-10/valueN1" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Th*" Score="0" />
+            <String Value="-" Score="0.1" />
+            <String Value="*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="92fce197-4d0a-ca75-f914-87d7fb166f03" Name="Telecom" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="d0fc4bc4-3831-9267-8093-7dd1d7840b0b" Name="Date of TELECOM Informations" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Custom Info/DateExec" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <CompositeScore UID="e7fdcd1c-4cdb-310f-8080-6d14db0ff112" Name="Location" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="4379e996-ba85-6419-4258-cb6497ce337a" Name="Server" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SpeigKey 01-10/valueN2" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="RODC*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="20c9f43f-6a04-6029-3bda-dec46c82b63c" Name="Network Area" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#NetworkArea" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="569031e6-f147-4770-f556-01e1f1ed2cfe" Name="Ethernet" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="6c34475c-a09f-6f8d-4a4b-574a94eb40c7" Name="Eth IP Address" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/EthIP" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="3efb5e38-cacc-ea96-552a-26025a2dbc20" Name="Eth Mac Address" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/EthMac" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="a56d3ae9-8a2a-b3ce-dd76-4cc778375559" Name="Eth Name" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/EthName" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="3d92e4dc-4b34-073f-6a75-d0d43d16f32c" Name="Eth Speed" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/EthSpeed" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="51282fc3-c22a-90e5-c510-d5c2f41e59b7" Name="Eth Router" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/EthRtr" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="202e578c-44a9-106c-db45-cf8bbc4bba53" Name="WireLess" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="fc1b09fe-fc95-6e5e-c1fa-32e1024cf6b3" Name="Wifi IP Address" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/WifiIP" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="943d5196-8876-e4ef-d239-430c020b4591" Name="Wifi Mac Address" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/WifiMac" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="2c48e05c-f7fa-a5ab-ddba-598419d8579b" Name="Wifi Name" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/WifiName" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="329f8e60-f107-3e7e-180e-cb5bc6846d38" Name="Wifi Speed" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/WifiSpeed" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="0b5c154d-1342-7aef-668b-0cddaf310fec" Name="Wifi Router" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Custom Info/WifiRtr" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+    </CompositeScore>
+    <Document>
+      <Header>This Score is refreshed every hour.</Header>
+      <Sections>
+        <Section>
+          <Title>Comments</Title>
+          <Description>Telecom Information of this score are coming from Remote Action.</Description>
+          <Description>The remote action are automatically launched every 6 hours.</Description>
+          <Description>It is possible to force the remote action using the link below.</Description>
+          <Description>NOTA BENE : After running the RA, it can take one hour before information are refreshed into the score.</Description>
+          <Description>---------------------------</Description>
+        </Section>
+        <Section>
+          <Title>Registry Key Information</Title>
+          <RemoteAction UID="24c999e2-37f5-4f20-bad4-4e458f663ea0" Name="Refresh Registry Key from device (ID Card, etc)" />
+        </Section>
+        <Section>
+          <Title>Telecom Information</Title>
+          <RemoteAction UID="fe1e743a-51e5-4e40-ab58-365420554aa8" Name="Refresh Custom Info from device (Telco, McAfee)" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

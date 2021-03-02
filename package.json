@@ -1,0 +1,49 @@
+{
+  "_from": "git+https://github.com/jeromewyss/nxt2itsm-no-auth.git",
+  "_id": "nxt2itsm@2.0.0",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/nxt2itsm",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/jeromewyss/nxt2itsm-no-auth",
+    "rawSpec": "https://github.com/jeromewyss/nxt2itsm-no-auth",
+    "saveSpec": "git+https://github.com/jeromewyss/nxt2itsm-no-auth.git",
+    "fetchSpec": "https://github.com/jeromewyss/nxt2itsm-no-auth.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/jeromewyss/nxt2itsm-no-auth.git#3bf10faee78c9b9579b0819d87fabcdc02b4b332",
+  "_spec": "https://github.com/jeromewyss/nxt2itsm-no-auth",
+  "_where": "/home/nexthink",
+  "author": {
+    "name": "Jérôme Wyss"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "pug": "^2.0.4",
+    "xml-js": "^1.6.11"
+  },
+  "deprecated": false,
+  "description": "nxt2itsm without authentication",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "license": "ISC",
+  "main": "app.js",
+  "name": "nxt2itsm",
+  "scripts": {
+    "start": "node app.js",
+    "startDev": "nodemon app.js"
+  },
+  "version": "2.0.0"
+}

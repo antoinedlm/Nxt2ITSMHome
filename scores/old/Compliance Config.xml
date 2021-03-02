@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="f4a4c34f-aaaa-ec7e-8c34-9569d211aafe" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="Compliance Config" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device(ne device_type (enum server))(lt number_of_days_since_last_seen (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>6h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="frustrating" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="5" Label="average" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="7" Label="good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="db5ed059-aaaa-ac4a-9bc9-b03cc8870003" Name="Compliance Config" Description="" Visibility="visible" Weight="1" DisplayName="Compliance Config">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="e3917521-e0de-2b28-6de0-240a923e3367" Name="Configuration" Description="" Visibility="visible" Weight="1" DisplayName="Configuration">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="f61060e8-169c-ee25-ae41-cd55d5efc2e3" Name="Bios" Description="" Visibility="visible" Weight="1" DisplayName="Bios">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="153ed703-8fe4-3a8d-d1a2-13b32466b88d" Name="TPM Enablement Status" Description="" Visibility="visible" Weight="1" DisplayName="TPM Enablement Status">
+          <Input>
+            <Field Name="#action:Get BitLocker Information/TPMIsEnabled" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="TPM Not Enabled">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="TPM Enabled">
+                <From Value="1" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="67a5f5cb-2396-52e9-1fa7-7d9bb47488e1" Name="TPM Activation Status" Description="" Visibility="visible" Weight="1" DisplayName="TPM Activation Status">
+          <Input>
+            <Field Name="#action:Get BitLocker Information/TPMIsActive" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="TPM Not Activated">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="TPM Activated">
+                <From Value="1" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="51989f56-2435-8752-4916-fef88c734fc1" Name="TPM Ownership Status" Description="" Visibility="visible" Weight="1" DisplayName="TPM Ownership Status">
+          <Input>
+            <Field Name="#action:Get BitLocker Information/TPMIsOwned" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="TPM Not Owned">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="TPM Owned">
+                <From Value="1" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <LeafScore UID="709f5c73-c8cc-30a4-e021-50deaf1a0a32" Name="Drivers Version" Description="" Visibility="visible" Weight="1" DisplayName="Drivers Version">
+        <Input>
+          <Field Name="#Value_to_define" />
+        </Input>
+        <Normalization>
+          <Enums>
+            <Enum Value="aaa" Score="0" />
+          </Enums>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="ce901b49-09f4-ae75-9b7e-f146895d723d" Name="Skynote Build Level" Description="" Visibility="visible" Weight="1" DisplayName="Skynote Build Level">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="20508956-0a3d-5670-e5a0-2736241cc486" Name="OS _ Skynote Status" Description="" Visibility="visible" Weight="1" DisplayName="OS _ Skynote Status">
+        <Input>
+          <Field Name="#Windows OS Skynote Build Compliance" />
+        </Input>
+        <Normalization>
+          <Enums>
+            <Enum Value="Version Up to Date" Score="10" />
+            <Enum Value="Version Acceptable" Score="6" />
+            <Enum Value="Version Obsolete" Score="1" />
+            <Enum Value="*" Score="0" />
+          </Enums>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="b9c3742a-bc17-e4f8-d0c8-bae11aa3d9a7" Name="Office _ Skynote Status" Description="" Visibility="visible" Weight="1" DisplayName="Office _ Skynote Status">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/Office_Skynote" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Office Package OLD Version detected">
+              <From Value="0" Score="1" />
+            </Range>
+            <Range Label="Office Package PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="Office Package UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="53a96ce1-3505-080e-ebf3-a7d7e153789d" Name="Stack Secu" Description="" Visibility="visible" Weight="1" DisplayName="Stack Secu">
+      <Operation>
+        <Max />
+      </Operation>
+      <LeafScore UID="a6389932-75de-ff74-c6a8-41995e43aab3" Name="SEP _ Client Version" Description="" Visibility="visible" Weight="1" DisplayName="SEP _ Client Version">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/ATV_SEP" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="SEP not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="SEP OLD Version detected">
+              <From Value="1" Score="1" />
+            </Range>
+            <Range Label="SEP PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="SEP UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="66568340-0db5-2fbc-e892-b73a0087d752" Name="CS _ Client Version" Description="" Visibility="visible" Weight="1" DisplayName="CS _ Client Version">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/ATV_CS" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="CrowdStrike not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="CrowdStrike OLD Version detected">
+              <From Value="1" Score="1" />
+            </Range>
+            <Range Label="CrowdStrike PREVIOUS Version detected">
+              <From Value="6" Score="6" />
+            </Range>
+            <Range Label="CrowdStrike UP TO DATE Version detected">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="7dc872af-65a2-3add-c412-c00a323ac72c" Name="Stack App" Description="" Visibility="visible" Weight="1" DisplayName="Stack App">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="b3aabd54-fc1b-8d1a-bd2e-113a14c04d7a" Name="MS Office" Description="" Visibility="visible" Weight="1" DisplayName="MS Office">
+        <Input>
+          <Computation Name="MS Office" Description="" UID="e2a00bda-85dc-6244-d913-7a3d6fdfe6b8">
+            <Query Output="#action:Get MS Office information/MSOfficeVersion" DefaultOutputValue="MS Office not detected">(select (id #"action:Get MS Office information/MSOfficeVersion")
+    (from device
+        (where device (eq #"action:Get MS Office information/MSOfficeVersion" (pattern "*O*(*)*")))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*O*(*)*" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="b171d756-79be-c29c-11ad-ca4575c3c367" Name="MS OneDrive" Description="" Visibility="visible" Weight="1" DisplayName="MS OneDrive">
+        <Input>
+          <Computation Name="MS OneDrive" Description="" UID="5f5dd5b3-3709-8606-98cc-d8e87e758217">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS OneDrive")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS OneDrive not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS OneDrive detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="9cbddb1e-2349-ae5b-f3e2-bca0193cec3c" Name="MS Edge" Description="" Visibility="visible" Weight="1" DisplayName="MS Edge">
+        <Input>
+          <Computation Name="MS Edge" Description="" UID="dab96985-7f18-7dba-d48a-7531aa6177c5">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS Edge")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS Edge not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS Edge detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="424e3eac-15d6-9977-be5a-913e5313d3b1" Name="Adobe Reader DC" Description="" Visibility="visible" Weight="1" DisplayName="Adobe Reader DC">
+        <Input>
+          <Computation Name="Adobe Reader DC" Description="" UID="6da232dc-c75c-6c73-fffa-59417e7290e0">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Adobe Reader DC")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Adobe Reader DC not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Adobe Reader DC detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="e69f7ac4-97ac-6e1b-6d6a-b71210ada8c4" Name="Stack technique" Description="" Visibility="visible" Weight="1" DisplayName="Stack technique">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="f1d1459b-b22f-0c0b-33a5-556d2e624970" Name="MS DotNet 3.5" Description="" Visibility="visible" Weight="1" DisplayName="MS DotNet 3.5">
+        <Input>
+          <Computation Name="MS DotNet 3.5" Description="" UID="e74eaa56-06bd-f678-50fe-5076a5feb94e">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS DotNet 3.5")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS DotNet 3.5 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS DotNet 3.5 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="54b0dd1b-8633-9a7b-9bf5-e402477c56b2" Name="MS DotNet 4" Description="" Visibility="visible" Weight="1" DisplayName="MS DotNet 4">
+        <Input>
+          <Computation Name="MS DotNet 4" Description="" UID="e607efb9-90eb-54af-5cc2-1e80553b319a">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS DotNet 4")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS DotNet 4 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS DotNet 4 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="9c5cac04-2e9b-a4a4-5373-b08cb4c0846f" Name="MS AIP" Description="" Visibility="visible" Weight="1" DisplayName="MS AIP">
+        <Input>
+          <Computation Name="MS AIP" Description="" UID="f64cc0a3-8023-4b28-f445-6c47b2ce909d">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS AIP")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS AIP not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS AIP detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="d555bf22-0472-1716-2154-a0f2d9af5869" Name="MS AIP for Adobe" Description="" Visibility="visible" Weight="1" DisplayName="MS AIP for Adobe">
+        <Input>
+          <Computation Name="MS AIP for Adobe" Description="" UID="19ca0aac-3319-173f-a0f4-83cc8bf2b102">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "MS AIP for Adobe")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="MS AIP for Adobe not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="MS AIP for Adobe detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="1c5365cc-adce-e852-f473-4e901864ab15" Name="Visual C++ 2005" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2005">
+        <Input>
+          <Computation Name="Visual C++ 2005" Description="" UID="4805f2d3-f5f6-1f01-7a4c-97eae3d754b2">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2005")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2005 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2005 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="6d543661-d07c-42a0-e83e-1aba71ce74ed" Name="Visual C++ 2008" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2008">
+        <Input>
+          <Computation Name="Visual C++ 2008" Description="" UID="6e1a844a-21f6-4f6e-4a04-2db4a01ca707">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2008")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2008 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2008 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="02fb4edb-46db-7fe3-5305-372fba548935" Name="Visual C++ 2010" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2010">
+        <Input>
+          <Computation Name="Visual C++ 2010" Description="" UID="fd18444d-0d56-3c51-e193-8d2763059de3">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2010")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2010 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2010 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="fb42ea7e-930e-14be-d4aa-ede99c43f6b3" Name="Visual C++ 2012" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2012">
+        <Input>
+          <Computation Name="Visual C++ 2012" Description="" UID="c6c0aed7-6141-0b7b-60af-dc5f3c693247">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2012")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2012 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2012 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="6c2b79cb-aa65-9688-9dfe-ccd1f2bb2a4f" Name="Visual C++ 2013" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2013">
+        <Input>
+          <Computation Name="Visual C++ 2013" Description="" UID="8826fbec-0c47-9437-8fb9-e7ce8c743b57">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2013")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2013 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2013 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="d27f0cbb-1ac9-a367-53f4-892d61dd0190" Name="Visual C++ 2015" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2015">
+        <Input>
+          <Computation Name="Visual C++ 2015" Description="" UID="36d5ba0a-01b7-888f-6936-6f34f33a1c1c">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2015")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2015 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2015 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="b1c903e5-50b4-eec5-fe3a-8f8f7de02f72" Name="Visual C++ 2017" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2017">
+        <Input>
+          <Computation Name="Visual C++ 2017" Description="" UID="6adb2833-c47c-57b9-252b-70910a5d7465">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2017")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2017 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2017 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="2dfec7fa-fd85-63f9-30eb-35b82114ceab" Name="Visual C++ 2019" Description="" Visibility="visible" Weight="1" DisplayName="Visual C++ 2019">
+        <Input>
+          <Computation Name="Visual C++ 2019" Description="" UID="f198f720-5055-958c-a961-568d5533de9e">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Visual C++ 2019")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Visual C++ 2019 not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Visual C++ 2019 detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="32bf6b3d-8e31-a869-3873-2712c995c346" Name="7-Zip" Description="" Visibility="visible" Weight="1" DisplayName="7-Zip">
+        <Input>
+          <Computation Name="7-Zip" Description="" UID="c6d6ecda-784b-5c7f-0e99-aa836180e5a9">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "7-Zip")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="7-Zip not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="7-Zip detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="76a30869-4422-223c-e530-646ed7b3ff05" Name="Barco Clickshare" Description="" Visibility="visible" Weight="1" DisplayName="Barco Clickshare">
+        <Input>
+          <Computation Name="Barco Clickshare" Description="" UID="96872d86-d8b8-898a-9e28-86f843f13a41">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Barco Clickshare")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Barco Clickshare not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Barco Clickshare detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="f8dce994-ed69-0ad9-2495-e2fe9b724c7a" Name="Support Button" Description="" Visibility="visible" Weight="1" DisplayName="Support Button">
+        <Input>
+          <Computation Name="Support Button" Description="" UID="f00448d0-aa83-d6bf-3b65-8b6ceaf7365d">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Support Button")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Support Button not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Support Button detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="ea177493-4f91-8f4f-3125-ed09b8e59b8f" Name="Workplace State Engine" Description="" Visibility="visible" Weight="1" DisplayName="Workplace State Engine">
+        <Input>
+          <Computation Name="Workplace State Engine" Description="" UID="36710af9-d795-f55d-5f96-18a928da3f49">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Workplace State Engine")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Workplace State Engine not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Workplace State Engine detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <LeafScore UID="abe7e596-57a7-ac3f-9b6c-17bf915156c1" Name="Phish Alert" Description="" Visibility="visible" Weight="1" DisplayName="Phish Alert">
+        <Input>
+          <Computation Name="Phish Alert" Description="" UID="d68a05e1-b8e5-52cb-cd79-d078277d5dc3">
+            <Query Output="number_of_packages" DefaultOutputValue="0">(select (id)
+    (from device
+        (with package
+            (where package (eq #"Skynote Master" (enum "Phish Alert")))
+            (compute number_of_packages))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Phish Alert not detected">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Phish Alert detected">
+              <From Value="1" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <Document />
+    </CompositeScore>
+    <Document />
+  </CompositeScore>
+</ScoreDef>

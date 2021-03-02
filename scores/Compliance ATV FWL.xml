@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="f4a4c34f-bbbb-ec7e-8c34-9569d211aafe" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="Compliance ATV FWL" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>        (with execution
+            (where executable (eq name (string "svchost.exe")))
+            (where device
+            	(ne device_type (enum server))
+            	(lt number_of_days_since_last_seen (integer 1)))
+            (between now-60m now))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>15min</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="frustrating" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="5" Label="average" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="7" Label="good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="db5ed059-bbbb-ac4a-9bc9-b03cc8870003" Name="Compliance ATV FWL" Description="" Visibility="visible" Weight="1" DisplayName="Compliance Security">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="96c2b137-b0a3-fac6-9d1e-e1a740e91be7" Name="Antivirus" Description="" Visibility="visible" Weight="1" DisplayName="Antivirus">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="988f2d16-2671-767e-6968-b87a942fc1e3" Name="Activité" Description="" Visibility="visible" Weight="1" DisplayName="Activité">
+        <Operation>
+          <Max />
+        </Operation>
+        <LeafScore UID="fb5ca1b4-944c-e99a-140b-b0d617a28e73" Name="SEP _ EXE ATV Running" Description="" Visibility="visible" Weight="1" DisplayName="SEP _ EXE ATV Running">
+          <Input>
+            <Field Name="#score:00_Engie_Shadow/SEP-Exe-ATV" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non actif la dernière heure">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="4b82053a-deb1-79ee-730b-4ab543979724" Name="CS _ Exe ATV Running" Description="" Visibility="visible" Weight="1" DisplayName="CS _ Exe CS Running">
+          <Input>
+            <Field Name="#score:00_Engie_Shadow/CS-Exe-ATV" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non actif la dernière heure">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="4a591c7b-6c78-f12b-098a-9ce72170d309" Name="Signature &amp; cnx" Description="" Visibility="visible" Weight="1" DisplayName="Signature &amp; cnx">
+        <Operation>
+          <Max />
+        </Operation>
+        <LeafScore UID="42911259-bba4-0a97-034e-307ce5c009ba" Name="SEP _ AV Signature Age" Description="" Visibility="visible" Weight="1" DisplayName="SEP _ AV Signature Age">
+          <Input>
+            <Field Name="#Value_to_Come" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="1ec025e2-91bb-c2bd-10a6-273bfa96de6c" Name="SEP _ Health Evaluation" Description="" Visibility="visible" Weight="1" DisplayName="SEP _ Health Evaluation">
+          <Input>
+            <Field Name="#Value_to_Come" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="81a8238c-6832-1759-edcb-b2c8e75a5c03" Name="CS _ Connected" Description="" Visibility="visible" Weight="1" DisplayName="CS _ Connected">
+          <Input>
+            <Field Name="#Value_to_Come" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <Document />
+    </CompositeScore>
+    <CompositeScore UID="24949d86-cb0d-8746-03bd-90c16abf8427" Name="FireWall" Description="" Visibility="visible" Weight="1" DisplayName="FireWall">
+      <Operation>
+        <Max />
+      </Operation>
+      <LeafScore UID="2b4bf0e4-c8d2-e2a0-7db7-43065038d677" Name="SEP _ EXE FWL Running" Description="" Visibility="visible" Weight="1" DisplayName="SEP _ EXE FWL Running">
+        <Input>
+          <Field Name="#score:00_Engie_Shadow/SEP-Exe-FWL" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Agent non actif la dernière heure">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Agent actuellement actif">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+        <Document />
+      </LeafScore>
+      <CompositeScore UID="7727afe5-3094-0f85-c1f1-b9b455e80f9e" Name="Real Time Protection" Description="" Visibility="visible" Weight="1" DisplayName="Real Time Protection">
+        <Operation>
+          <Min />
+        </Operation>
+        <LeafScore UID="5c190f85-362d-dba6-9052-fb5d3e8619c6" Name="RTP Status" Description="" Visibility="visible" Weight="1" DisplayName="RTP Status">
+          <Input>
+            <Field Name="firewall_rtp" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Label="Firewall Activé" Value="on" Score="10" />
+              <Enum Label="Firewall non Activé ou statut inconnu" Value="*" Score="0" />
+            </Enums>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <LeafScore UID="7a97c6c2-c504-f6d4-4220-74ffa90724e3" Name="Firewall Actif" Description="" Visibility="visible" Weight="1" DisplayName="Firewall Actif">
+          <Input>
+            <Field Name="firewall_name" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="CrowdStrike Falcon Sensor" Score="10" />
+              <String Value="Windows Firewall" Score="10" />
+            </Strings>
+          </Normalization>
+          <Document />
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <Document />
+    </CompositeScore>
+    <Document />
+  </CompositeScore>
+</ScoreDef>

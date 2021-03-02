@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="bf38e5ea-4321-536b-ac9c-69758ff918aa" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="12_Score_SCCM" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+            (ne device_type (enum server))
+            (lt number_of_days_since_last_seen (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="31c54ab5-4321-1cb3-c391-cbced999240c" Name="12_Score_SCCM" Description="Indicates the Hardware status With information Cross Services" Visibility="visible" Weight="1">
+    <Operation>
+      <WeightedAverage />
+    </Operation>
+    <CompositeScore UID="f26dfde6-bc97-5a4f-8956-104353145860" Name="SCCM" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <WeightedAverage />
+      </Operation>
+      <LeafScore UID="88e60d4d-2b6b-f77e-c4b4-ac48bc07aa06" Name="Date of SCCM Informations" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SCCM Client Status/DateExec" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaaaa" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <CompositeScore UID="ece37f9d-e508-3e21-041f-906fba343790" Name="Agent Status Running" Description="" Visibility="visible" Weight="100">
+        <Operation>
+          <WeightedAverage />
+        </Operation>
+        <LeafScore UID="c324617e-e93e-1261-294c-238d35139dd6" Name="SMS Agent Status" Description="" Visibility="visible" Weight="100">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/SMSAgentStatus" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="1ecc5c04-4000-da32-27f5-b23fe4ed910a" Name="Background Intelligent Transfer Service Status" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/BITSStatus" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="d794cfef-bcfa-a3f3-0c96-abc821cb03a7" Name="WMI Status" Description="" Visibility="visible" Weight="100">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/WMIStatus" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="0a4e29cb-f977-7366-b7f9-e1228309e026" Name="Remote Procedure Call Subsystem Status" Description="" Visibility="visible" Weight="100">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/RPCSubsystemStatus" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="927fb801-40a0-e51f-4018-e145fae6afb7" Name="Windows Time Service Status" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/WindowsTimeServiceStatus" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="a3582eed-90c4-4363-dd8f-9dc55e89651e" Name="Agent Status Installation" Description="" Visibility="visible" Weight="100">
+        <Operation>
+          <WeightedAverage />
+        </Operation>
+        <LeafScore UID="22ef6137-4041-5ef4-e2af-088e02538e8c" Name="Client Installed" Description="" Visibility="visible" Weight="100">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/ClientInstalled" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Label="Yes" Value="true" Score="10" />
+              <String Label="No" Value="false" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="5115d172-2a67-0a2b-f2d4-5841c989c1c1" Name="Management Site" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/ManagementSite" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="PP1" Score="10" />
+              <String Value="RP1" Score="7" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="3407da6d-4895-57d1-3a95-63d4108e3d6a" Name="Missing Software Updates" Description="Number of missing software updates" Visibility="visible" Weight="100">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/MissingSoftwareUpdates" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="No Missing Software">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="1 or 2 Softwares are missing">
+                <From Value="1" Score="7" />
+              </Range>
+              <Range Label="more than 3 Softwares are missing">
+                <From Value="2" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="d5a57bb4-39b4-6850-d6d8-57d8782add98" Name="Cumulative Update" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <WeightedAverage />
+        </Operation>
+        <LeafScore UID="8df3c727-5e36-bd1d-06e0-2d08a307d8e9" Name="Month of Last Cumulative Update" Description="Last cumulative update installed on the device" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/LastCumulativeUpdate" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="90ecf02a-87bb-b758-137a-e31ca094e68d" Name="Months Since Last Cumulative Update" Description="Months since last cumulative update installed on the device" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/MonthsSinceLastCumulativeUpdate" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="This Month">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Before this Month">
+                <From Value="1" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="8670dde0-15e9-e1d7-697b-8f24ccde322c" Name="Last Scan" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <WeightedAverage />
+        </Operation>
+        <LeafScore UID="f7fbc49d-176c-4222-b9c2-d22472899d06" Name="Date of Last Scan" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/LastScan" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="28df9b29-7057-d825-ed00-930d5734f1a7" Name="Days Since Last Scan" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/DaysSinceLastScan" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Today">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Last Week">
+                <From Value="1" Score="7" />
+              </Range>
+              <Range Label="More than one Week">
+                <From Value="7" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="54e86057-3d7f-41d0-1722-52f10334b85d" Name="Last Communication" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <WeightedAverage />
+        </Operation>
+        <LeafScore UID="794db244-9678-1dcd-1b7e-dad2db1f23b1" Name="Date of Last Communication" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/LastCommunication" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="ea238e60-ae1d-4c2d-5b32-1b8a0dc96d52" Name="Days Since Last Communication" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SCCM Client Status/DaysSinceLastCommunication" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Today">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Last Week">
+                <From Value="1" Score="7" />
+              </Range>
+              <Range Label="More than one Week">
+                <From Value="0" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+    </CompositeScore>
+    <Document>
+      <Header>This Score is refreshed every hour.</Header>
+      <Sections>
+        <Section>
+          <Title>Comments</Title>
+          <Description>The information of this score are coming from Remote Action and/or from datas of the collector.</Description>
+          <Description>The remote action are automatically launched every 6 hours.</Description>
+          <Description>It is possible to force the remote action using the link below.</Description>
+          <Description>NOTA BENE : After running the RA, it can take one hour before information are refreshed into the score.</Description>
+          <Description>---------------------------</Description>
+        </Section>
+        <Section>
+          <Title>SCCM Remote Action</Title>
+          <RemoteAction UID="605685c7-052d-85ca-f371-11f3b91e2c0b" Name="Refresh SCCM Client Status from device" />
+          <RemoteAction UID="422c25ad-5236-1641-6c0d-13e71ae27f02" Name="Repair SCCM on device (repair locally)" />
+          <RemoteAction UID="55569ab5-41c7-6636-492d-86066aff76c5" Name="Restore SCCM on device (reinstall from Server)" />
+        </Section>
+        <Section>
+          <Title>Windows Update Remote Action</Title>
+          <RemoteAction UID="78f36fcc-6898-ad65-cf24-dd3ff0553da7" Name="Install windows Update on device" />
+          <RemoteAction UID="f7eff57f-e071-d80a-8190-2c346d4da8f9" Name="Invoke Windows Update on device" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

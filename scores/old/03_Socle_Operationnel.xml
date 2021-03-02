@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="a6955572-3333-ceec-2cd9-3d910f7fa71e" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="03_Socle_Operationnel" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+          	(ne device_type (enum server))
+            	(lt number_of_days_since_last_seen  (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="790e1395-3333-cd17-6a8c-faa84ca6738c" Name="03_Socle_Operationnel" Description="" Visibility="visible" Weight="1">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="8d351ff9-b2b2-2910-5ed3-f0683f1d87ad" Name="Sauvegarde" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="d5246281-07fa-b168-0e54-c680128d5ea2" Name="Version _ Agent Avamar" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV05" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="9375ef8c-2893-d15b-a375-0a2f162a5b6b" Name="Activité _ Agent Avamar" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:00_Socle_Shadow/Avamar" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Agent non démarré depuis une semaine">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Agent démarré durant les 7 derniers jours">
+              <From Value="7" Score="7" />
+            </Range>
+            <Range Label="Agent actuellement actif">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="8d8fa2ca-71c5-5844-ccdc-26a31adc0ba5" Name="Performance" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="ab793912-2301-550a-fe75-ea5b68ad335a" Name="Boot Time" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="average_boot_duration" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range>
+              <From Value="0" Score="10" />
+            </Range>
+            <Range>
+              <From Value="15000" Score="8" />
+            </Range>
+            <Range>
+              <From Value="30000" Score="6" />
+            </Range>
+            <Range>
+              <From Value="60000" Score="3" />
+            </Range>
+            <Range>
+              <From Value="90000" Score="0" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="22d65423-0613-3316-5ad9-494a714b0ad4" Name="Logon Duration (extended)" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="extended_logon_duration_baseline" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range>
+              <From Value="0" Score="10" />
+            </Range>
+            <Range>
+              <From Value="30000" Score="8" />
+            </Range>
+            <Range>
+              <From Value="60000" Score="6" />
+            </Range>
+            <Range>
+              <From Value="90000" Score="3" />
+            </Range>
+            <Range>
+              <From Value="120000" Score="0" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="17c09902-072e-b37c-2506-d81a8a9fdd57" Name="Smart Index" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="disks_smart_index" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range>
+              <From Value="0.0" Score="0" />
+            </Range>
+            <Range>
+              <From Value="0.8" Score="3" />
+            </Range>
+            <Range>
+              <From Value="0.95" Score="6" />
+            </Range>
+            <Range>
+              <From Value="1.0" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="41a8b12e-00d1-f616-cf6e-3e7eeea887c0" Name="Capacité d'Action" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="067366ff-b186-ed03-5789-7863f6d3661b" Name="Présence Logiciels" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="fb35859e-424c-75f3-cf11-682fa783fee4" Name="Version _ Collector" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV08" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="4c3a9cf9-b0a8-7ee0-ae4f-c95257bf963a" Name="Version _ Agent Ivanti" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV09" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="59ffaaae-6f8f-41b1-922f-d1be3bee52f3" Name="Version _ Catalogue Ivanti" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV10" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="74933b62-9ce9-3994-456c-a78d18a9314e" Name="Activité Logiciels" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="889707a9-65e6-348b-00eb-8c51e0f1f53e" Name="Statut _ Collector" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="last_known_connection_status" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Label="Le Collector est bien connecté" Value="udp_tcp" Score="10" />
+              <Enum Label="Le Collector n'est pas connecté complètement" Value="*" Score="0" />
+            </Enums>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="1b45ef4c-383a-e49c-b13d-f1af4635d80e" Name="Activité _ WSUS" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Computation Name="Soft _ Activité WSUS" Description="" UID="59a319e6-d3e6-f939-8359-e96420879e8e">
+              <Query Output="successful_connections_ratio" DefaultOutputValue="0">(select (id name)
+    (from device 
+        (with connection
+            (where destination (eq #CNES_Destination (enum "WSUS")))
+            (where port (eq #CNES_Port (enum "WSUS")))
+            (compute successful_connections_ratio)            
+            (between now-7d now))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Serveur WSUS non contacté depuis 7j">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Serveur WSUS contacté difficilement depuis 7j">
+                <From Value="0.85" Score="6" />
+              </Range>
+              <Range Label="Serveur WSUS contacté depuis 7j">
+                <From Value="0.90" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="fdb0e5d7-9524-4b64-008e-20e4bad58139" Name="Activité _ Agent Ivanti" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/IvantiAgt" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="f9b9f257-05e6-15ea-6523-bd2bcac101b9" Name="Activité _ Catalogue Ivanti" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/IvantiCat" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="cd5c8fe1-f38d-1ba6-dbaa-91079d159b6f" Name="Activité _ Scan Ivanti" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#CNES_to_Define" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+    </CompositeScore>
+    <CompositeScore UID="38c5a9e8-03b5-f278-79c6-bc9f44b04d83" Name="Mobilité" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="9c47d805-3769-43c2-1d16-db4866b97bb4" Name="Certificat" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="5555d971-a533-0bf9-5606-b556b33df6d4" Name="Statut" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Test Set of certificate/Certificate1DayToExpire" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Le Certificat est valide*" Score="10" />
+              <String Value="Le Certificat va expirer*" Score="6" />
+              <String Value="Le Certificat est expiré" Score="0.001" />
+              <String Value="*est absent dans*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="065c1974-2e9d-2b62-3dc7-b75e8473190c" Name="Date d'expiration" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Test Set of certificate/Certificate1Date" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*est absent dans*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="d610376b-e0e0-df45-95a6-004707e225dc" Name="Numéro de série" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Test Set of certificate/Certificate1Serial" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*est absent dans*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="969953ec-67af-b344-a90c-b2089b3f07e2" Name="Nombre de Certificat" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Test Set of certificate/Certificate1Number" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*est présent 1 fois dans*" Score="10" />
+              <String Value="*est présent plusieurs fois dans*" Score="6" />
+              <String Value="*est absent dans*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <LeafScore UID="c517bc1f-5496-df4d-54a5-7e18a10ed667" Name="Stratégie FW EPO" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get CnesKey 01-10/ValueN02" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*PDT Nomade*" Score="10" />
+            <String Value="*non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="59e8c32c-991f-b5d9-3e21-1f8f43942210" Name="Version _ OMTS / OTC" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV12" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="0f7ee991-2240-1914-4732-e555a6fb74a4" Name="Version _ Client F5" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV11" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="173f12c8-99ed-6871-82ce-d9aa5b619740" Name="Activité _ Client F5" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:00_Socle_Shadow/ClientF5" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Agent non démarré depuis une semaine">
+              <From Value="0" Score="0" />
+            </Range>
+            <Range Label="Agent démarré durant les 7 derniers jours">
+              <From Value="7" Score="7" />
+            </Range>
+            <Range Label="Agent actuellement actif">
+              <From Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="0435a258-85f3-d0cf-0835-00f3a25e5589" Name="Editique" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="5f87b545-42cf-a9b9-60bc-7177c4f956b6" Name="Version _ Driver éditique" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV16" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="45817d4c-6581-eaa2-8aae-48b89d19984f" Name="Impression standard" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/PrintQueue00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="* File présente" Score="10" />
+            <String Value="File non présente" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="7b63b4ce-99a5-8be2-bf82-f3dc4751b89c" Name="Impression sécurisée" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/PrintQueue01" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="* File présente" Score="10" />
+            <String Value="File non présente" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="af602243-510b-4190-0420-61d24f16403e" Name="Internet / DNS" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="7175c7b4-220e-4d95-d9d0-b3c233ef88e1" Name="Proxy" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get CnesKey 01-10/ValueN03" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="http://proxy-surf.loc.cnes.fr:8051/proxy.pac" Score="10" />
+            <String Value="*non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="7036e0ad-76ba-6c2b-cba5-7dce708ec2e5" Name="DNS _ Liste des Serveurs" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/StatutDNS" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Liste Srv DNS OK*" Score="10" />
+            <String Value="Liste Srv DNS incomplète*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="c3b74ab2-d774-6599-8d5e-83e90782f752" Name="DNS _ Liste des Interfaces" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/IFandDNS" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaaaaaaaa" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="bff77d06-ed58-01f4-2fce-6e8a976b08d6" Name="DNS _ Liste des suffixes" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/ListSuffix" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Liste Suffixe DNS OK*" Score="10" />
+            <String Value="Liste Suffixe DNS NON OK*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <Document>
+      <Header>Le rôle de ce score est de mesurer principalement l'Activité du Poste.
+Ce score associe les informations de présence du Logiciel, en parallèle de son statut démarré ou non, et des informations plus techniques telles que le Boot.
+
+Les informations de type "inventaires" (Présence Logiciel) sont basées sur des Remotes Action.
+Les informations de type "Activité" et les informations "Techniques" sont basées sur des données de la Base de donnée Nexthink.
+
+La note Globale de ce score est une moyenne pondérée.
+
+Les informations de type activité sont re-évaluées toutes les 15 minutes.
+Le Score ACTIVITE est rafraichi toutes les heures.</Header>
+      <Sections>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Fréquence de Rafraichissement des Remotes Action</Title>
+          <Description>Logiciels et Certificat : une fois par jour</Description>
+          <Description>Clefs de registre, DNS, PrintQueue, Groupes : toutes les 6 heures</Description>
+        </Section>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Déclanchement Manuel des Remotes Action</Title>
+          <Description>NOTA BENE : le déclanchement manuel de la Remote Action sera repris dans le score au plus tard une heure après son déclanchement.</Description>
+          <RemoteAction UID="3bcdedfc-865c-444d-83b0-7613501f556f" Name="Rafraichissement de la Liste des Logiciels" />
+          <RemoteAction UID="5ea4f3de-10d8-497c-96dc-ab010120d551" Name="Rafraichissement des Clefs de registres (Proxy)" />
+          <RemoteAction UID="50e8d94e-388c-40d0-b16c-5644f2a0bee7" Name="Rafraichissement du Certificat" />
+          <RemoteAction UID="76949d8e-e0d3-492f-9bb1-aeb0fc5b21cc" Name="Rafraichissement des informations IT (DNS, PrintQueue)" />
+          <RemoteAction UID="bb55e42e-3f6f-4fba-be36-bd6ba1eee644" Name="Rafraichissement des infos Admin du poste" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

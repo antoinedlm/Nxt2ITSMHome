@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="bf38e5ea-3b61-536b-ac9c-69758ff918aa" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="11_Score_Light" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+            (ne device_type (enum server))
+            (lt number_of_days_since_last_seen (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="31c54ab5-f04e-1cb3-c391-cbced999240c" Name="11_Score_Light" Description="Indicates the Hardware status With information Cross Services" Visibility="visible" Weight="1">
+    <Operation>
+      <WeightedAverage />
+    </Operation>
+    <CompositeScore UID="2fa953a9-dfa7-561a-ce7a-a6e5398f6e78" Name="Identification" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="4de9861d-7e66-7a47-4744-7ce775d325e1" Name="Device Name" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="name" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="7a1ae77c-8958-e5c9-9617-fc5bbbf858e3" Name="User Name" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Password Info/UsrName" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="891dfcd9-2efe-7b81-2c26-4b521508d363" Name="User Domain" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Password Info/UsrDomain" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="ACCOUNT IS LOCAL" Value="LOCAL ACCOUNT" Score="0" />
+            <String Value="*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="98865bc3-260d-1501-aa58-abf19473ebb5" Name="Territory" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SpeigKey 01-10/valueN1" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Th*" Score="0" />
+            <String Value="-" Score="0.1" />
+            <String Value="*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <CompositeScore UID="9fdc5439-10a5-5cac-8a5b-c382d4632d97" Name="Warranty" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="f4373820-7981-0905-72aa-62b9aa270a59" Name="Warrenty Starting Date" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/WrtyStartDate" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="f3b2c00c-7ddc-23b7-1262-361870b92ed0" Name="Warranty Level" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/WrtyLevel" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="df710893-8b5b-4e08-21c7-a83bd433f599" Name="End of Warranty : Date" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/WrtyEndDate" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="1a0c4c07-0e74-0217-0306-2056fea53ccc" Name="End of Warranty : Number of Day" Description="-Not Found : 0&#xA;-expired : 0&#xA;-less 6 month : 6&#xA;-between 6 months &amp; 1 year : 6&#xA;-between 1 &amp; 2 years : 8&#xA;-More 2 years : 10" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/DayBeforeEoW" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Less 6 month">
+                <From Value="0" Score="3" />
+                <To Value="180" Score="3" />
+              </Range>
+              <Range Label="Between 6 months &amp; 1 year">
+                <From Value="181" Score="6" />
+                <To Value="365" Score="6" />
+              </Range>
+              <Range Label="Between 1 &amp; 2 years">
+                <From Value="366" Score="8" />
+                <To Value="730" Score="8" />
+              </Range>
+              <Range Label="More than 2 years">
+                <From Value="731" Score="10" />
+                <To Value="8887" Score="10" />
+              </Range>
+              <Range Label="Warranty is expired">
+                <From Value="8888" Score="0" />
+                <To Value="8889" Score="0" />
+              </Range>
+              <Range Label="Information cannot be found">
+                <From Value="9999" Score="0.1" />
+                <To Value="10000" Score="0.1" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="e98b2940-e40d-2b59-e0ae-bda56a74ad5c" Name="End of Usage : Date" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/UsageEndDate" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaa" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="2cb00654-e2ef-d469-f193-cdd06b5d752a" Name="End of Usage : Number of Day" Description="-Not Found : 0&#xA;-expired : 0&#xA;-less 6 month : 3&#xA;-between 6 months &amp; 1 year : 6&#xA;-between 1 &amp; 2 years : 8&#xA;-between 2 &amp; 3 years : 9&#xA;-More 3 years : 10" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Warranty Info/DayBeforeChange" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Less 6 month">
+                <From Value="0" Score="3" />
+                <To Value="180" Score="3" />
+              </Range>
+              <Range Label="Between 6 months &amp; 1 year">
+                <From Value="181" Score="6" />
+                <To Value="365" Score="6" />
+              </Range>
+              <Range Label="Between 1 &amp; 2 years">
+                <From Value="366" Score="8" />
+                <To Value="730" Score="8" />
+              </Range>
+              <Range Label="Between 2 &amp; 3 years">
+                <From Value="731" Score="9" />
+                <To Value="1095" Score="9" />
+              </Range>
+              <Range Label="More than 3 years">
+                <From Value="1095" Score="10" />
+                <To Value="8887" Score="10" />
+              </Range>
+              <Range Label="Device must be change">
+                <From Value="8888" Score="0" />
+                <To Value="8889" Score="0" />
+              </Range>
+              <Range Label="Information cannot be found">
+                <From Value="9999" Score="0.2" />
+                <To Value="10000" Score="0.2" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+      <CompositeScore UID="c9a436e8-01b9-cead-f27b-83707e84aaa9" Name="Password" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="34acabbd-37f1-689e-113a-3e567571a63a" Name="Date of the password information" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Password Info/DateExec" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="884329f3-011b-8c0b-a600-40138ebe336d" Name="Last change Password : Date" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Password Info/UsrPassLastChange" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="d8f73a76-649f-f770-be7c-510b5b00b751" Name="Next change Password : Date" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Password Info/UsrPassNextChange" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="33d6be24-ebf4-4ff6-ab3b-a05143ad08cb" Name="Next change Password : number of Day" Description="-Local Account: 0&#xA;-expired : 0&#xA;-less 1 week  : 0&#xA;-between 2 weeks &amp;  1 month : 6&#xA;-between 1 &amp; 3 months : 8&#xA;-More 3 months : 10&#xA;-More 4 months : 10&#xA;-More 5 months : 10&#xA;-More 6 months : 10" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh Password Info/UsrDay2Change" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="less 1 week">
+                <From Value="0" Score="0" />
+                <To Value="13" Score="0" />
+              </Range>
+              <Range Label="between 2 weeks and 1 Month">
+                <From Value="14" Score="6" />
+                <To Value="30" Score="6" />
+              </Range>
+              <Range Label="between 1 and 3 Months">
+                <From Value="31" Score="8" />
+                <To Value="90" Score="8" />
+              </Range>
+              <Range Label="more 3 Months">
+                <From Value="91" Score="9.7" />
+                <To Value="120" Score="9.7" />
+              </Range>
+              <Range Label="more 4 Months">
+                <From Value="121" Score="9.8" />
+                <To Value="150" Score="9.8" />
+              </Range>
+              <Range Label=" more 5 Months">
+                <From Value="151" Score="9.9" />
+                <To Value="180" Score="9.9" />
+              </Range>
+              <Range Label="more 6 Months">
+                <From Value="181" Score="10" />
+                <To Value="776" Score="10" />
+              </Range>
+              <Range Label="Information cannot be found">
+                <From Value="777" Score="0.2" />
+                <To Value="778" Score="0.2" />
+              </Range>
+              <Range Label="PASSWORD IS EXPIRED">
+                <From Value="888" Score="0.3" />
+                <To Value="889" Score="0.3" />
+              </Range>
+              <Range Label="ACCOUNT IS LOCAL">
+                <From Value="999" Score="0.4" />
+                <To Value="1000" Score="0.4" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <Document />
+      </CompositeScore>
+    </CompositeScore>
+    <CompositeScore UID="f170cbc1-433c-d62c-2366-d67bb95b5d02" Name="Windows Update" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="311d4610-5a7a-eac2-6e76-04105a2cb7bd" Name="Number of day since last Update" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="number_of_days_since_last_windows_update" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Less one Week">
+              <From Value="0" Score="10" />
+            </Range>
+            <Range Label="more than one week">
+              <From Value="7" Score="0" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="40a34106-eb63-30a6-a4e9-c216733b339b" Name="Status of Windows Update" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="windows_updates_status" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="ok" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="f05d9d49-8dca-16d7-6c76-16c5efa6fc88" Name="SCCM" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="eb508065-5595-2cc0-5aec-c8e2ac100b55" Name="SMS Scoring" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#score:12_Score_SCCM/SCCM" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="CRITICAL SCCM Status">
+              <From Value="0" Score="0" />
+              <To Value="5.99" Score="5.99" />
+            </Range>
+            <Range Label="BAD SCCM Status">
+              <From Value="6" Score="6" />
+              <To Value="7.99" Score="7.99" />
+            </Range>
+            <Range Label="GOOD SCCM Status">
+              <From Value="8" Score="8" />
+              <To Value="10" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="be311173-bf76-27f8-0e5c-5791901b3bad" Name="SMS Agent Status" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SCCM Client Status/SMSAgentStatus" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Running" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="c83f6fc3-1e54-6db2-30ae-c7b0fba1ffc3" Name="Client Installed" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SCCM Client Status/ClientInstalled" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Yes" Value="true" Score="10" />
+            <String Label="No" Value="false" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="08fc2cea-2894-18ce-cdd8-47d862f47fce" Name="Bureautique" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="69f4c281-c9d2-d545-c304-c24f97aa9fa0" Name="Device" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="89d68de8-de89-660b-0d37-357a67eb4c15" Name="System Free Disk" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#Device Free Disk" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Value="Less than 1 GB" Score="0" />
+              <Enum Value="Less than 5 GB" Score="6" />
+              <Enum Value="More than 5 GB" Score="10" />
+            </Enums>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="9ce7b535-96b3-ab63-3e3e-81bbf9b5b47f" Name="Smart disk" Description="" Visibility="visible" Weight="1">
+          <Input Format="percent">
+            <Field Name="disks_smart_index" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range>
+                <From Value="0" Score="0" />
+              </Range>
+              <Range>
+                <From Value="0.8" Score="3" />
+              </Range>
+              <Range>
+                <From Value="0.95" Score="6" />
+              </Range>
+              <Range>
+                <From Value="1" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="04558d57-6d2a-aad0-5f35-23783ef84156" Name="CPU" Description="" Visibility="visible" Weight="1">
+          <Input Format="permill">
+            <Computation Name="High device overall cpu time ratio last 7 days" Description="" UID="e87339f0-e084-ae17-56c4-7bd3634e8107">
+              <Query Output="high_device_overall_cpu_time_ratio" DefaultOutputValue="0">(select (id)
+              (from device
+              (with device_warning
+              (between now-7d now)
+              (compute high_device_overall_cpu_time_ratio))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range>
+                <From Value="0" Score="10" />
+              </Range>
+              <Range>
+                <From Value="0.01" Score="9" />
+              </Range>
+              <Range>
+                <From Value="0.02" Score="6" />
+              </Range>
+              <Range>
+                <From Value="0.04" Score="3" />
+              </Range>
+              <Range>
+                <From Value="0.1" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="70617124-13e8-2d5f-f941-c9b1d083f66d" Name="RAM" Description="" Visibility="visible" Weight="1">
+          <Input Format="permill">
+            <Computation Name="High memory usage ratio last 7 days" Description="" UID="74787830-f8ca-da52-df55-04dd25a816fa">
+              <Query Output="high_device_memory_time_ratio" DefaultOutputValue="0">(select (id)
+                          (from device
+                          (with device_warning
+                          (between now-7d now)
+                          (compute high_device_memory_time_ratio))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range>
+                <From Value="0" Score="10" />
+              </Range>
+              <Range>
+                <From Value="0.01" Score="8" />
+              </Range>
+              <Range>
+                <From Value="0.02" Score="6" />
+              </Range>
+              <Range>
+                <From Value="0.04" Score="3" />
+              </Range>
+              <Range>
+                <From Value="0.1" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="557bf901-fe28-5a9f-f080-30a5c60c6616" Name="Blue Screen" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Computation Name="Number of system crashes last 7 days" Description="" UID="9a7adead-de6f-7cc6-f7a8-3c7907eb4359">
+              <Query Output="number_of_errors" DefaultOutputValue="0">(select (id)
+                          (from device
+                          (with device_error
+                          (where device_error (eq type (enum system_crash)))
+                          (compute number_of_errors)
+                          (between now-7d now))))</Query>
+            </Computation>
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="No Blue Screen last 7 days">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="At least One blue screen or more last 7 days">
+                <From Value="1" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="58509fcf-27dd-bbe3-bff5-c1f113034565" Name="Software" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="2121adc1-47da-dd6d-8900-08e4ba2a1549" Name="Office" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SpeigSoftware Information/SoftwareOffice" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*(*)*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="c131cc34-bb49-9fbb-ae4c-bf584a68a7af" Name="OneDrive" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SpeigSoftware Information/SoftwareOneDrive" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*(*)*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="c13164a2-249e-fc1f-8aa3-7172355ce407" Name="Pulse" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SpeigSoftware Information/SoftwareV01" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*(*)*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="c1e60ee6-9624-a965-5cf0-79a79c0685d1" Name="Nexthink collector Version" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Refresh SpeigSoftware Information/SoftwareV00" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="*(*)*" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="6c13f7b4-2824-683b-a9e2-9d0dbef722c2" Name="Nexthink collector Status" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="last_known_connection_status" />
+          </Input>
+          <Normalization>
+            <Enums>
+              <Enum Label="Collector is fully connected" Value="udp_tcp" Score="10" />
+              <Enum Label="Colelctor is not completely connected" Value="*" Score="0" />
+            </Enums>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+    </CompositeScore>
+    <CompositeScore UID="7d9c2367-bd31-e9b4-ec9e-1cd02326b2de" Name="Security" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="65d2d646-c8e7-6a3c-d9dc-255c3d71ef88" Name="Client McAfee Cloud" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SpeigSoftware Information/SoftwareV02" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*(*)*" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="4a524ff5-e786-5e8a-8761-9667d390f510" Name="Client McAfee Endpoint Security" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh SpeigSoftware Information/SoftwareV03" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*(*)*" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="5697701b-d25a-d78d-2b56-065c0f6a31b8" Name="McAfee ES _ Date Sign File" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Custom Info/McAfeeDate" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="aaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="e8e85e5d-597a-8043-2c6c-4f1cef9f6e32" Name="McAfee ES _ Age of Sign File" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Refresh Custom Info/McAfeeAge" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range Label="Mc Afee Sign less than one Week">
+              <From Value="0" Score="10" />
+            </Range>
+            <Range Label="Mc Afee Sign more than one Week">
+              <From Value="7" Score="6" />
+            </Range>
+            <Range Label="No Mc Afee Sign file found on Device">
+              <From Value="999" Score="0" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <Document>
+      <Header>This Score is refreshed every hour.</Header>
+      <Sections>
+        <Section>
+          <Title>Comments</Title>
+          <Description>The information of this score are coming from Remote Action and/or from datas of the collector.</Description>
+          <Description>The remote action are automatically launched every 6 hours.</Description>
+          <Description>It is possible to force the remote action using the link below.</Description>
+          <Description>NOTA BENE : After running the RA, it can take one hour before information are refreshed into the score.</Description>
+          <Description>---------------------------</Description>
+        </Section>
+        <Section>
+          <Title>Custom Remote Action</Title>
+          <RemoteAction UID="24c999e2-37f5-4f20-bad4-4e458f663ea0" Name="Refresh Registry Key from device (ID Card, etc)" />
+          <RemoteAction UID="fe1e743a-51e5-4e40-ab58-365420554aa8" Name="Refresh Custom Info from device (Telco, McAfee)" />
+          <RemoteAction UID="db5e57fc-a38d-4890-b93e-b1dbf5b6ae7a" Name="Refresh Software Info from device" />
+          <RemoteAction UID="eb5e5fed-4234-4a1c-96f5-925c54a56674" Name="Refresh Warranty Info from device" />
+          <RemoteAction UID="56ca6848-6696-4a4d-93b0-3f697aa3fb79" Name="Refresh Password Info from device" />
+        </Section>
+        <Section>
+          <Title>Windows Update Remote Action</Title>
+          <RemoteAction UID="78f36fcc-6898-ad65-cf24-dd3ff0553da7" Name="Install windows Update on device" />
+          <RemoteAction UID="f7eff57f-e071-d80a-8190-2c346d4da8f9" Name="Invoke Windows Update on device" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

@@ -1,0 +1,94 @@
+{
+    "#'Hardware'": [
+        "---------------------------- H A R D W A R E ",
+        "enum"
+    ],
+    "device_model": [
+        "Device Model",
+        "string"
+    ],
+    "device_type": [
+        "Device Type",
+        "string"
+    ],
+    "device_serial_number": [
+        "Serial Number",
+        "string"
+    ],
+    "cpu_model": [
+        "CPU Model",
+        "string"
+    ],
+    "logical_cpu_number": [
+        "Logical CPU number",
+        "integer"
+    ],
+    "total_ram": [
+        "Total Ram",
+        "byte"
+    ],
+    "graphical_cards": [
+        "Graphical Cards",
+        "string"
+    ],
+    "monitors": [
+        "Connected Monitors",
+        "string"
+    ],
+    "#'Network'": [
+        "---------------------------- N E T W O R K ",
+        "enum"
+    ],
+    "last_local_ip_address": [
+        "IP Address",
+        "ip_address"
+    ],
+    "entity": [
+        "Entity",
+        "string"
+    ],
+    "#'Startup'": [
+        "---------------------------- S T A R T U P ",
+        "enum"
+    ],
+    "last_system_boot": [
+        "Last Boot Date",
+        "datetime"
+    ],
+    "last_logged_on_user": [
+        "Last user logged on",
+        "string"
+    ],
+    "last_logon_time": [
+        "Last Logon Time",
+        "datetime"
+    ],
+    "#'Operating System'": [
+        "---------------------------- O P E R A T I N G - S Y S T E M ",
+        "enum"
+    ],
+    "os_version_and_architecture": [
+        "Operating System",
+        "string"
+    ],
+    "#'OS compliance'": [
+        "OD Compliance",
+        "enum"
+    ],	
+    "last_update": [
+        "last Update",
+        "datetime"
+    ],
+    "#'Local Drive'": [
+        "---------------------------- L O C A L - D R I V E",
+        "enum"
+    ],
+    "logical_drives": [
+        "Logical Drives",
+        "string"
+    ],
+    "disks_manufacturers": [
+        "Disks Manufacturers",
+        "string"
+    ]
+}

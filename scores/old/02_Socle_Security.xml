@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="a6955572-2222-ceec-2cd9-3d910f7fa71e" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="02_Socle_Security" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+          	(ne device_type (enum server))
+            	(lt number_of_days_since_last_seen  (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="790e1395-2222-cd17-6a8c-faa84ca6738c" Name="02_Socle_Security" Description="" Visibility="visible" Weight="1">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="1ae95067-ef16-2370-bf80-9eb1b3838830" Name="Groupe Admin" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="40502a1b-626e-dc77-a732-a02eac3ed483" Name="User Assistance" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Cnes User Information/ListLclUser00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le user Assistance est présent" Value="User Local trouvé" Score="10" />
+            <String Label="Le user Assistance n'est pas présent" Value="User Local non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="e41ca33c-e191-4044-8662-048b910ff358" Name="User Campagne" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Cnes User Information/ListLclUser01" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le user Campagne est présent" Value="User Local trouvé" Score="10" />
+            <String Label="Le user Campagne n'est pas présent" Value="User Local non trouvé" Score="7" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="d0d85377-1bab-a4cf-59a6-773a61373a7c" Name="Groupe CNESNET\GGM_Admin_W7" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Cnes User Information/ListLclGrp00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le groupe CNESNET\GGM_Admin_W7 est présent" Value="Groupe Local trouvé" Score="10" />
+            <String Label="Le groupe CNESNET\GGM_Admin_W7 n'est pas présent" Value="Groupe Local non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="9eaff4dd-80b6-013b-d798-da7d1662e2da" Name="Bitlocker" Description="Indicates the Bitlocker compliance score." Visibility="visible" Weight="1">
+      <Operation>
+        <Min />
+      </Operation>
+      <LeafScore UID="907c8d1c-c71b-87e2-234d-d605793e0e93" Name="Statut BitLocker" Description="Indicates the Antispyware real time protection score. If protection is: &#xA; � on = 10. &#xA; � at risk = 0. " Visibility="visible" Weight="10">
+        <Input>
+          <Computation Name="BitLocker Status" Description="" UID="270670b8-305f-afeb-1fc9-d77c46ec6be6">
+            <Query Output="#action:Get Windows Info (BitLocker)/BitLockerProtectionStatus" DefaultOutputValue="Desktop are not concerned">(select (id #"action:Get Windows Info (BitLocker)/BitLockerProtectionStatus")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Protection activated" Value="Protected" Score="10" />
+            <String Label="Protection status unknown" Value="Unknown" Score="0" />
+            <String Label="Protection unactivated" Value="Unprotected" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="b6ede29a-465d-eccc-0420-a84ab30bf846" Name="Disk Encryption status" Description="Indicates the Disk Encryption. If status is: &#xA; � ok = 10. &#xA; � at risk = 0. " Visibility="visible" Weight="10">
+        <Input>
+          <Computation Name="Disk Encryption Status" Description="" UID="dec4e86f-668d-45b2-6cc8-fc8aea0631bd">
+            <Query Output="#action:Get Windows Info (BitLocker)/BitLockerConversionStatus" DefaultOutputValue="Desktop are not concerned">(select (id #"action:Get Windows Info (BitLocker)/BitLockerConversionStatus")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Fully Encrypted" Value="Fully encrypted" Score="10" />
+            <String Label="Encryption in progress" Value="Encryption in progress" Score="5" />
+            <String Label="Fully Decrypted" Value="Fully decrypted" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="99100d8a-124f-a4b5-4e21-a6e1210e0ea3" Name="Disk Encryption Method" Description="Indicates the Disk Encryption. If status is: &#xA; � ok = 10. &#xA; � at risk = 0. " Visibility="visible" Weight="10">
+        <Input>
+          <Computation Name="Disk Encryption Method" Description="" UID="88e18d85-b788-e356-fc0e-5e85f1875113">
+            <Query Output="#action:Get Windows Info (BitLocker)/BitLockerEncryptionMethod" DefaultOutputValue="Desktop are not concerned">(select (id #"action:Get Windows Info (BitLocker)/BitLockerEncryptionMethod")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Fully Encrypted" Value="aaaaaaaaaaaaaaaaaaa" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <Document>
+        <Header>Le score composite Bitlocker indique l'état de chiffrement actuel du disque système. 
+				
+Les Remotes action ci-après permettent :
+1/ de récupérer le statut BitLocker.
+2/ d'activer BitLocker sur le poste.
+
+Si l'état affiché est "aucune information", veuillez exécuter le script "Get Windows Info (Bitlocker)".</Header>
+        <Sections>
+          <Section>
+            <Title>Remote Action pour Bitlocker</Title>
+            <RemoteAction UID="23403f1d-b382-4501-a20e-88bd53036784" Name="Get BitLocker status" />
+            <RemoteAction UID="49e05747-ff5e-4441-879a-10808fdf1445" Name="Enable BitLocker" />
+          </Section>
+        </Sections>
+      </Document>
+    </CompositeScore>
+    <CompositeScore UID="87ba7c4b-a4e9-79ed-80c0-5a2aafb643cb" Name="Chiffrement" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="9c86a204-a37d-1bcf-859e-d789fefa15f9" Name="Logiciels Chiffrement" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="b650137e-45f5-0471-b338-6587d9aacf82" Name="Version _ ZoneCentral" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV13" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="38d43263-e050-e227-a9c3-e9f1c6e2dab8" Name="Version _ Mdw Carte" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV14" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="515cb742-6589-35fe-bc4c-2bea285c6cc1" Name="Version _ OpenTrust CMS" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV15" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="c3d86ffe-95e3-624b-db9a-5ae35712f3cd" Name="Activité Chiffrement" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="c03eb9de-9fef-68ca-e299-68c827b83e4c" Name="Activité _ ZoneCentral" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/ZoneCentral" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="7504bd25-a119-8a62-9a7b-5f09e1a92529" Name="Activité _ Mdw Carte" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/MdwCarte" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="d7f1b2de-b5d8-c2fd-2ce9-cc35219f2a87" Name="Activité _ OpenTrust CMS" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/OpenTrust" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+    </CompositeScore>
+    <CompositeScore UID="b3eb330d-feab-9e74-c626-929f861aa264" Name="Protection Virale" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <CompositeScore UID="570d2e7b-bdfd-c885-4fd0-471266884766" Name="Logiciel Mac Afee" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="3737221f-8ea9-94c9-f128-0d35901388ed" Name="Version _ Mac Afee ATV" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV06" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="e7595be9-22b7-dcda-9b5d-3dc960134820" Name="Version _ Mac Afee EndPoint" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get Software Information/SoftwareV07" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="Logiciel non installé" Score="0" />
+              <String Value="*(*)" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="a556c18d-15fb-133e-788e-e890977caec7" Name="Activité Mac Afee" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="87c21385-a479-159a-45d6-2935939a8c73" Name="Activité _ Mc Afee ATV" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/McAfeeAtv" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="7bd69377-ef48-a68d-7ef5-4df984f2bf7f" Name="Activité _ Mc Afee EndPoint" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#score:00_Socle_Shadow/McAfeeFW" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Agent non démarré depuis une semaine">
+                <From Value="0" Score="0" />
+              </Range>
+              <Range Label="Agent démarré durant les 7 derniers jours">
+                <From Value="7" Score="7" />
+              </Range>
+              <Range Label="Agent actuellement actif">
+                <From Value="10" Score="10" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+      <CompositeScore UID="bf8db331-a7b0-c750-7bed-bf63ee2f5159" Name="Statut Mac Afee" Description="" Visibility="visible" Weight="1">
+        <Operation>
+          <Average />
+        </Operation>
+        <LeafScore UID="f7b9df66-f16c-0181-1122-74436dd62c48" Name="Date dernier check" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/DateExec" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Value="aaaa" Score="10" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="702748ab-1ebc-a7aa-5aa9-cbb7b7cec0fc" Name="Etat des services" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/ENSServices" />
+          </Input>
+          <Normalization>
+            <Strings>
+              <String Label="Tous les services sont actifs" Value="All services are running" Score="10" />
+              <String Value="*" Score="0" />
+            </Strings>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="fa111955-5aa3-1a2c-ec5e-11227d4e7087" Name="Nb Jour _ Communication Agent Console" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/LastCom" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Moins de 2 semaines">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Entre 2 semaines et un mois">
+                <From Value="15" Score="7" />
+              </Range>
+              <Range Label="Plus de 1 mois">
+                <From Value="30" Score="1" />
+              </Range>
+              <Range Label="Information non disponible">
+                <From Value="999" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="355f1188-d361-4acf-a9ab-52c1b4d98f94" Name="Nb Jour _ MAJ Fichier de signature (AmCore)" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/AmcoreDate" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Moins de 2 semaines">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Entre 2 semaines et un mois">
+                <From Value="15" Score="7" />
+              </Range>
+              <Range Label="Plus de 1 mois">
+                <From Value="30" Score="1" />
+              </Range>
+              <Range Label="Information non disponible">
+                <From Value="999" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="312f33da-fe76-898c-74f9-8643dfe89b94" Name="Nb Jour _ Dernier Scan Réussi" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/LastODS" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Moins de 2 semaines">
+                <From Value="0" Score="10" />
+              </Range>
+              <Range Label="Entre 2 semaines et un mois">
+                <From Value="15" Score="7" />
+              </Range>
+              <Range Label="Plus de 1 mois">
+                <From Value="30" Score="1" />
+              </Range>
+              <Range Label="Information non disponible">
+                <From Value="999" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+        <LeafScore UID="90ebf2a6-2cc7-d24f-8ce7-c61bc72c0f1c" Name="Nb Jour _ Dernière menace trouvée" Description="" Visibility="visible" Weight="1">
+          <Input>
+            <Field Name="#action:Get McAfee Information/LastOAS" />
+          </Input>
+          <Normalization>
+            <Ranges>
+              <Range Label="Moins de 1 semaine">
+                <From Value="0" Score="0.1" />
+              </Range>
+              <Range Label="Entre 1 semaine et un mois">
+                <From Value="8" Score="7" />
+              </Range>
+              <Range Label="Plus de 1 mois">
+                <From Value="30" Score="10" />
+              </Range>
+              <Range Label="Information non disponible">
+                <From Value="999" Score="0" />
+              </Range>
+            </Ranges>
+          </Normalization>
+        </LeafScore>
+      </CompositeScore>
+    </CompositeScore>
+    <Document>
+      <Header>Le rôle de ce score est de mesurer la Sécurité du Poste.
+Les informations de sécurité concernent "Présence et Activité de Logiciel", "Statut de l'Antivirus", "Statut du groupe Admin".
+
+Les informations de type "inventaires" (Présence Logiciel) sont basées sur des Remotes Action.
+Les informations de type "Activité" sont basées sur des informations de la Base de donnée Nexthink.
+
+La note Globale de ce score est une moyenne pondérée.
+
+Les informations de type activité sont re-évaluées toutes les 15 minutes.
+Le Score SECURITE est rafraichi toutes les heures.</Header>
+      <Sections>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Fréquence de Rafraichissement des Remotes Action</Title>
+          <Description>Logiciels et Bitlocker : une fois par jour</Description>
+          <Description>Antivirus, Groupes : toutes les 6 heures</Description>
+        </Section>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Déclanchement Manuel des Remotes Action</Title>
+          <Description>NOTA BENE : le déclanchement manuel de la Remote Action sera repris dans le score au plus tard une heure après son déclanchement.</Description>
+          <RemoteAction UID="3bcdedfc-865c-444d-83b0-7613501f556f" Name="Rafraichissement de la Liste des Logiciels" />
+          <RemoteAction UID="13eeb562-74cf-40d9-8f90-72b756a339d3" Name="Rafraichissement des informations MacAfee" />
+          <RemoteAction UID="bb55e42e-3f6f-4fba-be36-bd6ba1eee644" Name="Rafraichissement des Groupes du poste" />
+        </Section>
+        <Section>
+          <Title>BITLOCKER</Title>
+          <RemoteAction UID="23403f1d-b382-4501-a20e-88bd53036784" Name="Rafraichissement des information Bitlocker" />
+          <RemoteAction UID="49e05747-ff5e-4441-879a-10808fdf1445" Name="Activation Bitlocker" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>

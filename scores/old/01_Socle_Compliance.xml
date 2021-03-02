@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScoreDef xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UID="a6955572-1111-ceec-2cd9-3d910f7fa71e" SyntaxVersion="1" DataModelVersion="13" Object="device" Name="01_Socle_Compliance" Status="enabled" InObjectView="true">
+  <Platforms>
+    <Platform>windows</Platform>
+  </Platforms>
+  <ScopeQuery>
+    <Filtering>(where device 
+          	(ne device_type (enum server))
+            	(lt number_of_days_since_last_seen  (integer 30)))</Filtering>
+  </ScopeQuery>
+  <ComputationSchedule>
+    <Every>1h</Every>
+  </ComputationSchedule>
+  <Thresholds>
+    <Threshold Color="red">
+      <Keyword From="0" Label="Critical" />
+    </Threshold>
+    <Threshold Color="yellow">
+      <Keyword From="6" Label="Bad" />
+    </Threshold>
+    <Threshold Color="green">
+      <Keyword From="8" Label="Good" />
+    </Threshold>
+  </Thresholds>
+  <CompositeScore UID="790e1395-1111-cd17-6a8c-faa84ca6738c" Name="01_Socle_Compliance" Description="" Visibility="visible" Weight="1">
+    <Operation>
+      <Average />
+    </Operation>
+    <CompositeScore UID="ae3e1bc5-c7b7-8ff5-a494-43d20b3d1baa" Name="Socle Bios" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="78fe3260-33b2-999f-89c8-6a5f3c88e11f" Name="Bios _ Password actif" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/PasswordBIOS" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le Module DELLBiosProvider n'est pas présent" Value="Module DELLBiosProvider non présent" Score="0" />
+            <String Label="Le Module DellSmBios n'est pas monté" Value="Drive DellSmbios non monté" Score="0.010" />
+            <String Label="Le Poste n'est pas conforme" Value="Poste non conforme" Score="0.02" />
+            <String Label="Le Password du Bios est desactivé" Value="Password Bios NOK" Score="0.03" />
+            <String Label="Le Password du Bios est activé" Value="Password Bios OK" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="14ec0f0e-b48d-f2bb-ab40-587433390125" Name="Bios _ Blocage Boot USB" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/BootUSB" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le Module DELLBiosProvider n'est pas présent" Value="Module DELLBiosProvider non présent" Score="0" />
+            <String Label="Le Module DellSmBios n'est pas monté" Value="Drive DellSmbios non monté" Score="0.010" />
+            <String Label="Le Poste n'est pas conforme" Value="Poste non conforme" Score="0.02" />
+            <String Label="Le Boot USB est activé" Value="Active" Score="0.03" />
+            <String Label="Le Boot USB est desactivé" Value="Boot USB non configuré" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="31a9de8d-d008-18c7-64d3-2c573c5c228d" Name="Bios _ Démarrage sélectif" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get IT Information/SelectStart" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Le Poste n'est pas conforme" Value="Poste non conforme" Score="0.02" />
+            <String Label="La séection du Start est actif" Value="Select Start activé" Score="0.03" />
+            <String Label="La séection du Start est inactif" Value="Select Start désactivé" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="c2a170c3-bb7f-d6d9-e841-9e9da9f6b0af" Name="Bios _ UEFI" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Windows Info (BitLocker)/StartupMode" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="UEFI" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="fa4e2821-b8a3-166a-813d-eb4b922084ea" Name="Socle Master" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="e20f0f3d-b889-a30c-58ec-c30be42f693a" Name="Master _ OS Version" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="os_version_and_architecture" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Windows 10*" Score="10" />
+            <String Value="*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="66dc6f1e-2fcf-61cb-c786-e54c6ba8753c" Name="Master _ Type de Master" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get CnesKey 01-10/ValueN00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*non trouvé" Score="0" />
+            <String Value="Standard" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="9e555c97-4d36-8598-8822-ce9dc8c66b4c" Name="Master _ Version de Master" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get CnesKey 01-10/ValueN01" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*non trouvé" Score="0" />
+            <String Value="*.*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="f6a9b465-794d-6982-a52e-cd8eaba8d6c9" Name="Socle Logiciel" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="0babff59-2220-0d2a-c257-84904bf80b92" Name="Version _ Office" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get MS Office information/MSOfficeVersion" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Logiciel non installé" Value="-" Score="0" />
+            <String Value="*" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="15efadf4-79cd-5474-2c2a-48362d46ff08" Name="Version _ Internet Explorer" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareIE" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="8e16c1a6-fbcb-b922-78e5-26fe165b99fd" Name="Version _ Skype" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="faf66d52-a887-f67f-c3ef-1645e79608ec" Name="Version _ Citrix" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV01" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="ece9e425-5169-e6c9-d094-528bb2d2734b" Name="Version _ SAP" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV02" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="1c1db125-64a2-6dc5-66d0-ac21fcc5ab82" Name="Version _ Keepass" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV03" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="829a62f4-1a4a-b818-4a09-b83b2ba852c6" Name="Version _ FireFox" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Software Information/SoftwareV04" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Logiciel non installé" Score="0" />
+            <String Value="*(*)" Score="10" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="531b428a-ea28-b346-b9ea-fae3f37f934e" Name="Socle Matériel" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="1a3fee30-e41b-218c-91a7-e03b3f210fe2" Name="Hard _ RAM" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="total_ram" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range>
+              <From Value="0" Score="1" />
+            </Range>
+            <Range>
+              <From Value="4294967296" Score="6" />
+            </Range>
+            <Range>
+              <From Value="8589934592" Score="8" />
+            </Range>
+            <Range>
+              <From Value="12884901888" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="49ce28db-4d1e-e416-75d4-32320f1e698c" Name="Hard _ CPU" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="logical_cpu_number" />
+        </Input>
+        <Normalization>
+          <Ranges>
+            <Range>
+              <From Value="1" Score="1" />
+            </Range>
+            <Range>
+              <From Value="2" Score="6" />
+            </Range>
+            <Range>
+              <From Value="4" Score="8" />
+            </Range>
+            <Range>
+              <From Value="8" Score="10" />
+            </Range>
+          </Ranges>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="b609e568-3f2b-1d30-e40f-946b991ef4b9" Name="Active Directory" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="08c15bce-d573-8647-acb9-6f02baa04fa8" Name="AD _ GPO" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#CNES_to_Define" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Label="Groupe GGM_Admin_W7@CNESNET non présent" Value="aaaaaaa" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="90092a25-3f15-4ace-2a96-8107680029b3" Name="Groupe _ GGM_OrdinateursW10" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Cnes User Information/ListADGrp00" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Groupe AD trouvé" Score="10" />
+            <String Value="Groupe AD non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="cf36053c-9a62-d4e0-f573-bcbc7f3fe155" Name="Groupe _ GGM_OrdinateursW10_ZoneCentral" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Get Cnes User Information/ListADGrp01" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Groupe AD trouvé" Score="10" />
+            <String Value="Groupe AD non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="097ad0ac-d692-9721-2f27-6c80655fd040" Name="Groupe _ GGM_OrdinateursW10_Bitlocker" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Computation Name="Groupe _ GGM_OrdinateursW10_Bitlocker" Description="" UID="e1239cf1-d88d-f623-47d3-2084551aa1bc">
+            <Query Output="action:Get Cnes User Information/ListADGrp02" DefaultOutputValue="Desktop _ Machine non concernée">(select (id #"action:Get Cnes User Information/ListADGrp02")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Groupe AD trouvé" Score="10" />
+            <String Value="Groupe AD non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="e9658fe9-70a9-fd62-2f7c-34b9e06bde4c" Name="Groupe _ GGM-Ordinateurs-Wifi-Employes_CNES" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Computation Name="Groupe _ GGM-Ordinateurs-Wifi-Employes_CNES" Description="" UID="aae93b04-fe32-86d1-8262-f5069a25345d">
+            <Query Output="action:Get Cnes User Information/ListADGrp03" DefaultOutputValue="Desktop _ Machine non concernée">(select (id #"action:Get Cnes User Information/ListADGrp03")
+    (from device
+        (where device (eq device_type (enum laptop)))))</Query>
+          </Computation>
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Groupe AD trouvé" Score="10" />
+            <String Value="Groupe AD non trouvé" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <CompositeScore UID="855eea37-472f-162c-d749-9f1e409e37f3" Name="Certificat Poste de Travail" Description="" Visibility="visible" Weight="1">
+      <Operation>
+        <Average />
+      </Operation>
+      <LeafScore UID="d49fb450-97e5-1fbc-788c-480e3c764775" Name="Statut" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Test Set of certificate/Certificate1DayToExpire" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="Le Certificat est valide*" Score="10" />
+            <String Value="Le Certificat va expirer*" Score="6" />
+            <String Value="Le Certificat est expiré" Score="0.001" />
+            <String Value="*est absent dans*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="099b5756-89df-bcfc-2ffe-f018373b86fd" Name="Date d'expiration" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Test Set of certificate/Certificate1Date" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*est absent dans*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="f28619a2-cc88-de36-a651-fd905e15675f" Name="Numéro de série" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Test Set of certificate/Certificate1Serial" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*est absent dans*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+      <LeafScore UID="dd7a0898-3559-bdab-cbb8-25273c9c967e" Name="Nombre de Certificat" Description="" Visibility="visible" Weight="1">
+        <Input>
+          <Field Name="#action:Test Set of certificate/Certificate1Number" />
+        </Input>
+        <Normalization>
+          <Strings>
+            <String Value="*est présent 1 fois dans*" Score="10" />
+            <String Value="*est présent plusieurs fois dans*" Score="6" />
+            <String Value="*est absent dans*" Score="0" />
+          </Strings>
+        </Normalization>
+      </LeafScore>
+    </CompositeScore>
+    <Document>
+      <Header>Le rôle de ce score est de mesurer la Compliance du Poste.
+Les information de compliances concernent clefs de registre, Logiciel, Certificats, Information IT.
+
+Les informations peuvent être basées sur des Remote Action, qui interrogent la base de Registre, ou exécutent des commandes PowerShell sur le poste.
+Elles peuvent aussi être issues directement de la Base de donnée Nexthink.
+
+La note Globale de ce score est une moyenne pondérée.
+
+Le Score COMPLIANCE est rafraichi toutes les heures.</Header>
+      <Sections>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Fréquence de Rafraichissement des Remotes Action</Title>
+          <Description>Logiciels et Certificat : une fois par jour</Description>
+          <Description>Clefs de registre, IT, Groupes : toutes les 6 heures</Description>
+        </Section>
+        <Section>
+          <Title>------------------------------------</Title>
+        </Section>
+        <Section>
+          <Title>Déclanchement Manuel des Remotes Action</Title>
+          <Description>NOTA BENE : le déclanchement manuel de la Remote Action sera repris dans le score au plus tard une heure après son déclanchement.</Description>
+          <RemoteAction UID="3bcdedfc-865c-444d-83b0-7613501f556f" Name="Rafraichissement de la Liste des Logiciels" />
+          <RemoteAction UID="5ea4f3de-10d8-497c-96dc-ab010120d551" Name="Rafraichissement des Clefs de registres" />
+          <RemoteAction UID="50e8d94e-388c-40d0-b16c-5644f2a0bee7" Name="Rafraichissement du Certificat" />
+          <RemoteAction UID="76949d8e-e0d3-492f-9bb1-aeb0fc5b21cc" Name="Rafraichissement des informations IT (Bios)" />
+          <RemoteAction UID="bb55e42e-3f6f-4fba-be36-bd6ba1eee644" Name="Rafraichissement des Groupes du poste" />
+        </Section>
+      </Sections>
+    </Document>
+  </CompositeScore>
+</ScoreDef>
